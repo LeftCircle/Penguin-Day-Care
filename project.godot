@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "StaticBody2D",
+"class": "BucketOfFish",
+"language": "GDScript",
+"path": "res://Map/Objects/BucketOfFish/BucketOfFish.gd"
+}, {
+"base": "RigidBody2D",
+"class": "Fish",
+"language": "GDScript",
+"path": "res://Map/Objects/Fish/Fish.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Penguin",
 "language": "GDScript",
@@ -17,9 +27,11 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "PenguinAI",
 "language": "GDScript",
-"path": "res://Characters/Penguin/Resources/PenguinAI.gd"
+"path": "res://Characters/Penguin/Scenes/PenguinAI.gd"
 } ]
 _global_script_class_icons={
+"BucketOfFish": "",
+"Fish": "",
 "Penguin": "",
 "PenguinAI": ""
 }
@@ -30,6 +42,10 @@ config/name="Penguin Day Care"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+GlobalFunctions="*res://Singletons/GlobalFunctions.gd"
+
 [layer_names]
 
 2d_physics/layer_1="World"
@@ -39,6 +55,7 @@ config/icon="res://icon.png"
 [physics]
 
 common/enable_pause_aware_picking=true
+2d/default_gravity=0
 
 [rendering]
 
