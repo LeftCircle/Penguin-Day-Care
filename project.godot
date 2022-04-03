@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "RigidBody2D",
+"class": "Ball",
+"language": "GDScript",
+"path": "res://Map/Objects/Ball/Ball.gd"
+}, {
 "base": "StaticBody2D",
 "class": "BucketOfFish",
 "language": "GDScript",
@@ -30,6 +35,7 @@ _global_script_classes=[ {
 "path": "res://Characters/Penguin/Scenes/PenguinAI.gd"
 } ]
 _global_script_class_icons={
+"Ball": "",
 "BucketOfFish": "",
 "Fish": "",
 "Penguin": "",
@@ -45,6 +51,14 @@ config/icon="res://icon.png"
 [autoload]
 
 GlobalFunctions="*res://Singletons/GlobalFunctions.gd"
+
+[input]
+
+pick_up={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
 
 [layer_names]
 
