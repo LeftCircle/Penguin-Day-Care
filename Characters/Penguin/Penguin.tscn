@@ -6,9 +6,9 @@
 [ext_resource path="res://Assets/Penguin/PenguinsSmall.png" type="Texture" id=5]
 [ext_resource path="res://Assets/PenguinFight.png" type="Texture" id=6]
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="CircleShape2D" id=20]
 resource_local_to_scene = true
-extents = Vector2( 9, 9 )
+radius = 24.0208
 
 [sub_resource type="Animation" id=2]
 resource_name = "EatingFish"
@@ -886,10 +886,15 @@ collision_mask = 7
 script = ExtResource( 2 )
 
 [node name="Collisions" type="CollisionShape2D" parent="."]
-position = Vector2( 0, 5 )
-shape = SubResource( 1 )
+shape = SubResource( 20 )
 
 [node name="PenguinAI" parent="." instance=ExtResource( 3 )]
+bucket_weight = 0.323
+swim_weight = 0.769
+ball_weight = 0.315
+eat_weight = 0.592
+wander_weight = 0.87
+bear_weight = 0.332
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/EatingFish = SubResource( 2 )

@@ -90,22 +90,22 @@ position = Vector2( 1089, 790 )
 position = Vector2( 508, 527 )
 
 [node name="Penguin2" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 625, 392 )
+position = Vector2( 584, 418 )
 
 [node name="Penguin3" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 679, 598 )
+position = Vector2( 920, 418 )
 
 [node name="Penguin4" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 1153, 602 )
+position = Vector2( 900, 695 )
 
 [node name="Penguin5" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 958, 397 )
+position = Vector2( 1198, 618 )
 
 [node name="Penguin6" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 1221, 354 )
+position = Vector2( 1438, 534 )
 
 [node name="Penguin7" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 837, 217 )
+position = Vector2( 1201, 353 )
 
 [node name="Penguin8" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 893, 646 )
+position = Vector2( 813, 215 )

@@ -8,9 +8,15 @@ export(float, 0, 1) var desire_threshold = 0.87
 export(float, 0, 350) var desire_distance = 350
 export(int, 0, 600) var max_ball_chase = 180
 export(int, 0, 5) var max_kicks = 3
+export(float, 0, 1) var bucket_weight = 0.5
+export(float, 0, 1) var swim_weight = 0.5
+export(float, 0, 1) var ball_weight = 0.5
+export(float, 0, 1) var eat_weight = 0.5
+export(float, 0, 1) var wander_weight = 0.5
+export(float, 0, 1) var bear_weight = 0.5
 
+enum states{SWIM, GO_FOR_BUCKET, EAT, BALL, WANDER, BEAR, N_STATES}
 
-enum states{SWIM, GO_FOR_BUCKET, EAT, BALL, SLIDE, FIGHT, WANDER, N_STATES}
 
 var current_state = states.GO_FOR_BUCKET
 var previous_state = states.WANDER
@@ -77,13 +83,15 @@ func _check_for_state_switch(current_position : Vector2):
 				_switch_state(states.BALL)
 				return
 	# We have to kick the ball once before eating fish
-	if is_instance_valid(desired_object) and desired_object.get_class() == "Ball":
-		if n_kicks < 1:
-			return
+#	if is_instance_valid(desired_object) and desired_object.get_class() == "Ball":
+#		if n_kicks < 1:
+#			return
 	var desired_fish = _get_desired_fish_or_null(current_position)
 	if desired_fish != null:
+		print("Desire dropped fish")
 		desired_object = desired_fish
 		_switch_state(states.EAT)
+
 
 func _get_desired_ball_or_null(current_position : Vector2):
 	var balls = get_tree().get_nodes_in_group("Ball")
@@ -94,7 +102,7 @@ func _get_desired_ball_or_null(current_position : Vector2):
 		if ball.state == ball.SELECTED:
 			continue
 		var dist_sq = current_position.distance_squared_to(ball.global_position)
-		if dist_sq < 0.1:
+		if dist_sq < 1:
 			return ball
 		if dist_sq <= desire_sq_dist:
 			var desire_percent = 1 - (dist_sq / desire_sq_dist)
@@ -111,19 +119,20 @@ func _get_desired_fish_or_null(current_position : Vector2):
 	if previous_state == states.GO_FOR_BUCKET or current_state == states.GO_FOR_BUCKET:
 		return null
 	var closest_fish = null
-	var all_fish = get_tree().get_nodes_in_group("Fish")
+	var all_fish = get_tree().get_nodes_in_group("DroppedFish")
 	var min_distance_sq = INF
 	eat_desire = 0
 	for fish in all_fish:
 		var dist_sq = current_position.distance_squared_to(fish.global_position)
-		if dist_sq < 0.1:
+		if dist_sq < 1:
 			return fish
 		if dist_sq < desire_sq_dist:
 			var desire_percent = 1 - (dist_sq / desire_sq_dist)
-			eat_desire += get_desire(desire_percent)
+			eat_desire += desire_percent
 		if dist_sq < min_distance_sq:
 			closest_fish = fish
 			min_distance_sq = dist_sq
+	#print(eat_desire)
 	if eat_desire > desire_threshold:
 		return closest_fish
 	return null
@@ -131,8 +140,7 @@ func _get_desired_fish_or_null(current_position : Vector2):
 func _on_wandar_state(current_position : Vector2) -> Vector2:
 	if randf() < switch_state_chance:
 		if not GlobalFunctions.is_in_water(current_position):
-			current_state = randi() % states.N_STATES
-			previous_state = states.WANDER
+			pick_random_state()
 			wander_position = Vector2.INF
 	if wander_position == Vector2.INF:
 		if randf() < 0.01:
@@ -148,6 +156,24 @@ func _on_wandar_state(current_position : Vector2) -> Vector2:
 		wander_position = Vector2.INF
 		return Vector2.ZERO
 	return wander_looking_vec
+
+func pick_random_state():
+	var rand_state = {
+		states.SWIM : randf() * swim_weight,
+		states.WANDER : randf() * wander_weight,
+		states.GO_FOR_BUCKET : randf() * bucket_weight,
+		states.EAT : randf() * eat_weight,
+		states.BALL : randf() * ball_weight,
+		states.BEAR : randf() * bear_weight,
+	}
+	var max_val = 0
+	var max_state = states.WANDER
+	for state in rand_state:
+		if rand_state[state] > max_val:
+			max_val = rand_state[state]
+			max_state = state
+	#print("Picked max_state")
+	_switch_state(max_state)
 
 func _on_bucket_state(current_position : Vector2) -> Vector2:
 	if desired_object == null:

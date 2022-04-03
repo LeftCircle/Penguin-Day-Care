@@ -3,7 +3,7 @@ class_name Penguin
 
 export(int, 0, 250) var max_wander_speed = 45
 export(int, 0, 250) var max_interest_speed = 120
-export(int, 0, 250) var impulse_speed = 100
+export(int, 0, 250) var impulse_speed = 250
 export(int, 0, 10) var max_fish_in_stomach = 3
 
 
@@ -87,11 +87,21 @@ func _on_collision(collider : Object) -> void:
 	if collider.is_in_group("BucketOfFish"):
 		(collider as BucketOfFish).on_penguin_collision(self)
 	if collider.is_in_group("Penguin"):
-		print("Collided with penguin")
+		on_penguin_collision(collider)
 
 func on_fish_collision():
 	penguin_state = EATING_FISH
 	animations.play("EatingFish")
+
+func on_fish_early_collision(fish):
+	var vec_to_pen = global_position.direction_to(fish.global_position)
+	collision_impulse = - vec_to_pen * impulse_speed
+	velocity = collision_impulse
+
+func on_penguin_collision(penguin : Penguin):
+	var vec_to_pen = global_position.direction_to(penguin.global_position)
+	collision_impulse = - vec_to_pen * impulse_speed
+	velocity = collision_impulse
 
 func on_ball_collision(ball : Ball) -> void:
 	var vec_to_ball = ball.global_position.direction_to(self.global_position)
@@ -118,7 +128,7 @@ func _eating_too_much_death():
 	queue_free()
 
 func _on_digestion_timer_end():
-	print("Digested")
+	#print("Digested")
 	fish_in_stomach -= 1
 	fish_in_stomach = max(0, fish_in_stomach)
 

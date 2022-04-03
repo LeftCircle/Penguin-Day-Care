@@ -35,6 +35,7 @@ func _input_event(viewport, event, shape_idx):
 		if event.button_index == BUTTON_LEFT and event.is_action_released("pick_up"):
 			state = FREE
 			set_collisions(true)
+			add_to_group("DroppedFish")
 
 func drag_to_mouse_position():
 	var mousepos = get_global_mouse_position()
@@ -42,6 +43,8 @@ func drag_to_mouse_position():
 
 func _on_Fish_body_entered(body):
 	if alive_frames < min_lifetime:
+		if body.get_class() == "Penguin":
+			body.on_fish_early_collision(self)
 		_push_away_from(body)
 		return
 	if body.get_class() == "Penguin":
