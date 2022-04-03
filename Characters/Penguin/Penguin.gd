@@ -45,10 +45,18 @@ func _physics_process(delta):
 		animations.play("EatingFish")
 
 func _idle(delta):
+	if GlobalFunctions.is_in_water(global_position):
+		animations.play("SwimIdle")
+	else:
+		animations.play("Idle")
 	velocity = velocity.move_toward(Vector2.ZERO, acceleration * delta)
 	_move_slide_and_collide()
 
 func _move(delta):
+	if GlobalFunctions.is_in_water(global_position):
+		animations.play("SlideUp")
+	else:
+		animations.play("WalkDown")
 	var max_speed = max_wander_speed if ai.current_state == ai.states.WANDER else max_interest_speed
 	velocity = velocity.move_toward(looking_vector * max_speed, acceleration * delta)
 	if velocity.length_squared() > pow(max_speed, 2):
@@ -90,6 +98,7 @@ func on_ball_collision(ball : Ball) -> void:
 	collision_impulse = vec_to_ball * impulse_speed
 	velocity = collision_impulse
 	ai.n_kicks += 1
+	#print(ai.n_kicks)
 	ai.time_since_kick = 0
 
 func apply_impulse():

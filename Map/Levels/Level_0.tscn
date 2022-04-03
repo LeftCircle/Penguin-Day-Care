@@ -1,7 +1,12 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/Maps/Level_0.png" type="Texture" id=1]
 [ext_resource path="res://Map/Levels/Level_0.gd" type="Script" id=2]
+[ext_resource path="res://Characters/Penguin/Penguin.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Map/Objects/Ball/Ball.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Map/Objects/SwimPoints/SwimPoint.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Map/Objects/Fish/Fish.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Map/Objects/BucketOfFish/BucketOfFish.tscn" type="PackedScene" id=7]
 
 [sub_resource type="NavigationPolygon" id=1]
 vertices = PoolVector2Array( 1173, 874, 1184, 988, 842, 988, 839, 919, 594, 751, 402, 759, 404, 697, 1592, 353, 1590, 599, 1536, 596, 1411, 356, 327, 700, 327, 385, 410, 385, 1211, 195, 1331, 195, 1328, 281, 1395, 719, 1395, 879, 596, 190, 594, 99, 1211, 99, 594, 924, 1536, 721, 1413, 284, 412, 190 )
@@ -20,21 +25,87 @@ script = ExtResource( 2 )
 texture = ExtResource( 1 )
 centered = false
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 960, 540 )
-current = true
-zoom = Vector2( 1.87, 1.791 )
-
 [node name="LandNav" type="Navigation2D" parent="."]
-visible = false
 
 [node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="LandNav"]
 visible = false
 navpoly = SubResource( 1 )
 
 [node name="WaterNav" type="Navigation2D" parent="."]
-visible = false
 
 [node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="WaterNav"]
 visible = false
 navpoly = SubResource( 2 )
+
+[node name="SwimPointContainer" type="Node2D" parent="."]
+
+[node name="SwimPoint" parent="SwimPointContainer" instance=ExtResource( 5 )]
+position = Vector2( 200, 923 )
+
+[node name="SwimPoint4" parent="SwimPointContainer" instance=ExtResource( 5 )]
+position = Vector2( 1637, 961 )
+
+[node name="SwimPoint5" parent="SwimPointContainer" instance=ExtResource( 5 )]
+position = Vector2( 1792, 566 )
+
+[node name="SwimPoint6" parent="SwimPointContainer" instance=ExtResource( 5 )]
+position = Vector2( 1664, 135 )
+
+[node name="SwimPoint7" parent="SwimPointContainer" instance=ExtResource( 5 )]
+position = Vector2( 932, 18 )
+
+[node name="SwimPoint8" parent="SwimPointContainer" instance=ExtResource( 5 )]
+position = Vector2( 990, 1057 )
+
+[node name="SwimPoint2" parent="SwimPointContainer" instance=ExtResource( 5 )]
+position = Vector2( 108, 478 )
+
+[node name="SwimPoint3" parent="SwimPointContainer" instance=ExtResource( 5 )]
+position = Vector2( 140, 104 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2( 960, 540 )
+current = true
+zoom = Vector2( 2, 2 )
+
+[node name="BallContainer" type="Node2D" parent="."]
+
+[node name="Ball" parent="BallContainer" instance=ExtResource( 4 )]
+position = Vector2( 837, 507 )
+
+[node name="Ball2" parent="BallContainer" instance=ExtResource( 4 )]
+position = Vector2( 990, 287 )
+
+[node name="FishContainer" type="Node2D" parent="."]
+
+[node name="Fish" parent="FishContainer" instance=ExtResource( 6 )]
+position = Vector2( 1078, 465 )
+
+[node name="BucketOfFish" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1089, 790 )
+
+[node name="PenguinContainer" type="Node2D" parent="."]
+
+[node name="Penguin" parent="PenguinContainer" instance=ExtResource( 3 )]
+position = Vector2( 508, 527 )
+
+[node name="Penguin2" parent="PenguinContainer" instance=ExtResource( 3 )]
+position = Vector2( 625, 392 )
+
+[node name="Penguin3" parent="PenguinContainer" instance=ExtResource( 3 )]
+position = Vector2( 679, 598 )
+
+[node name="Penguin4" parent="PenguinContainer" instance=ExtResource( 3 )]
+position = Vector2( 1153, 602 )
+
+[node name="Penguin5" parent="PenguinContainer" instance=ExtResource( 3 )]
+position = Vector2( 958, 397 )
+
+[node name="Penguin6" parent="PenguinContainer" instance=ExtResource( 3 )]
+position = Vector2( 1221, 354 )
+
+[node name="Penguin7" parent="PenguinContainer" instance=ExtResource( 3 )]
+position = Vector2( 837, 217 )
+
+[node name="Penguin8" parent="PenguinContainer" instance=ExtResource( 3 )]
+position = Vector2( 893, 646 )

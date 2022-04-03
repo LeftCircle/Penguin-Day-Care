@@ -37,6 +37,11 @@ func on_penguin_collision(penguin):
 	else:
 		return
 
+func _input_event(viewport, event, shape_idx):
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.is_action_pressed("pick_up"):
+			_spawn_fish()
+
 func _spawn_fish():
 	var new_fish = fish_scene.instance() as Fish
 	var x = (randi() % fish_spawn_offset) - half_fish_spawn_offset

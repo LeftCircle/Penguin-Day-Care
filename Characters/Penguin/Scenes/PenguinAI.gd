@@ -3,9 +3,9 @@ class_name PenguinAI
 
 export(float, 0, 1) var switch_state_chance = 0.05
 export(int, 150, 500) var max_sight = 500
-export(int, 100, 500) var max_wandar_distance = 100
-export(float, 0, 1) var desire_threshold = 0.9
-export(float, 0, 150) var desire_distance = 150
+export(int, 100, 5000) var max_wandar_distance = 2000
+export(float, 0, 1) var desire_threshold = 0.87
+export(float, 0, 350) var desire_distance = 350
 export(int, 0, 600) var max_ball_chase = 180
 export(int, 0, 5) var max_kicks = 3
 
@@ -36,7 +36,7 @@ func _init():
 func _physics_process(delta):
 	# This is the main way of losing interest in the ball
 	if current_state == states.BALL:
-		if n_kicks > max_kicks or time_since_kick > max_ball_chase:
+		if n_kicks >= max_kicks or time_since_kick > max_ball_chase:
 			desired_object = null
 			n_kicks = 0
 			time_since_kick = 0
@@ -59,21 +59,23 @@ func get_looking_vector_and_set_state(current_position : Vector2) -> Vector2:
 		return _on_eat_state(current_position)
 	elif current_state == states.BALL:
 		return _on_ball(current_position)
+	elif current_state == states.SWIM:
+		return _on_swim(current_position)
 	else:
 		current_state = states.WANDER
 	return Vector2.ZERO
 
 func _check_for_state_switch(current_position : Vector2):
 	# See if there is a ball or fish nearby (or check for weight desires?)
-	if desired_object == null or not is_instance_valid(desired_object):
-		#if desired_object.get_class() == "Ball":
-		var desired_ball = _get_desired_ball_or_null(current_position)
-		if desired_ball != null:
-			desired_object = desired_ball
-			time_since_kick = 0
-			n_kicks = 0
-			_switch_state(states.BALL)
-			return
+	if desired_object == null or not is_instance_valid(desired_object) or desired_object.get_class() != "Ball":
+		if not previous_state == states.BALL:
+			var desired_ball = _get_desired_ball_or_null(current_position)
+			if desired_ball != null:
+				desired_object = desired_ball
+				time_since_kick = 0
+				n_kicks = 0
+				_switch_state(states.BALL)
+				return
 	# We have to kick the ball once before eating fish
 	if is_instance_valid(desired_object) and desired_object.get_class() == "Ball":
 		if n_kicks < 1:
@@ -128,14 +130,17 @@ func _get_desired_fish_or_null(current_position : Vector2):
 
 func _on_wandar_state(current_position : Vector2) -> Vector2:
 	if randf() < switch_state_chance:
-		current_state = randi() % states.N_STATES
-		previous_state = states.WANDER
-		wander_position = Vector2.INF
+		if not GlobalFunctions.is_in_water(current_position):
+			current_state = randi() % states.N_STATES
+			previous_state = states.WANDER
+			wander_position = Vector2.INF
 	if wander_position == Vector2.INF:
 		if randf() < 0.01:
 			wander_position.x = current_position.x + (randi() % max_wandar_distance) - half_max_wander
 			wander_position.y = current_position.y + (randi() % max_wandar_distance) - half_max_wander
 			wander_looking_vec = current_position.direction_to(wander_position)
+			if not GlobalFunctions.is_in_water(wander_position) or not GlobalFunctions.is_on_land(wander_position):
+				wander_position = GlobalFunctions.get_random_object_in_group("Penguin").global_position
 		else:
 			wander_position = current_position
 			wander_looking_vec = Vector2.ZERO
@@ -198,8 +203,14 @@ func _on_fight(current_position : Vector2) -> Vector2:
 	return Vector2.ZERO
 
 func _on_swim(current_position : Vector2) -> Vector2:
-	# Pick a random point in the water
-	return Vector2.ZERO
+	if is_instance_valid(desired_object) and desired_object.is_in_group("SwimPoint"):
+		if current_position.distance_squared_to(desired_object.global_position) < 100:
+			desired_object = null
+			_switch_state(states.WANDER)
+			return Vector2.ZERO 
+	else:
+		desired_object = GlobalFunctions.get_random_object_in_group("SwimPoint")
+	return current_position.direction_to(desired_object.global_position)
 
 func after_bucket_collision():
 	if current_state == states.GO_FOR_BUCKET:
