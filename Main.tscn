@@ -1,12 +1,22 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Characters/Penguin/Penguin.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Characters/DevPenguin/DevPenguin.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Map/Objects/BucketOfFish/BucketOfFish.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Map/Objects/Ball/Ball.tscn" type="PackedScene" id=3]
 
 [node name="Main" type="Node2D"]
 
+[node name="DevPenguin2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 127, 340 )
+
 [node name="Penguin" parent="." instance=ExtResource( 1 )]
-position = Vector2( 275, 166 )
+position = Vector2( 457, 142 )
+
+[node name="RigidBody2D" parent="." instance=ExtResource( 3 )]
+position = Vector2( 566, 416 )
 
 [node name="BucketOfFish" parent="." instance=ExtResource( 2 )]
-position = Vector2( 125, 59 )
+position = Vector2( 479, 311 )
+
+[node name="DevPenguin" parent="." instance=ExtResource( 1 )]
+position = Vector2( 846, 381 )

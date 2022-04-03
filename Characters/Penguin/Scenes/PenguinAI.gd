@@ -6,6 +6,9 @@ export(int, 150, 500) var max_sight = 500
 export(int, 100, 500) var max_wandar_distance = 100
 export(float, 0, 1) var desire_threshold = 0.9
 export(float, 0, 150) var desire_distance = 150
+export(int, 0, 600) var max_ball_chase = 180
+export(int, 0, 5) var max_kicks = 3
+
 
 enum states{SWIM, GO_FOR_BUCKET, EAT, BALL, SLIDE, FIGHT, WANDER, N_STATES}
 
@@ -13,13 +16,11 @@ var current_state = states.GO_FOR_BUCKET
 var previous_state = states.WANDER
 var wander_looking_vec : Vector2
 
-var swim : float = 0
-var bucket : float = 0
 var eat_desire : float = 0
 var ball_desire : float = 0
-var slide : float = 0
 var fight : float = 0
-var wander : float = 0.1
+var time_since_kick = 0
+var n_kicks = 0
 
 var desired_object = null
 var wander_position = Vector2.INF
@@ -32,6 +33,16 @@ func _init():
 	wander_looking_vec.x = randf() - 0.5
 	wander_looking_vec.y = randf() - 0.5
 
+func _physics_process(delta):
+	# This is the main way of losing interest in the ball
+	if current_state == states.BALL:
+		if n_kicks > max_kicks or time_since_kick > max_ball_chase:
+			desired_object = null
+			n_kicks = 0
+			time_since_kick = 0
+			_switch_state(states.WANDER)
+		time_since_kick += 1
+
 func _switch_state(new_state : int) -> void:
 	if new_state != current_state:
 		previous_state = current_state
@@ -39,28 +50,38 @@ func _switch_state(new_state : int) -> void:
 
 func get_looking_vector_and_set_state(current_position : Vector2) -> Vector2:
 	_check_for_state_switch(current_position)
+	#return Vector2.ZERO
 	if current_state == states.WANDER:
 		return _on_wandar_state(current_position)
 	elif current_state == states.GO_FOR_BUCKET:
 		return _on_bucket_state(current_position)
 	elif current_state == states.EAT:
 		return _on_eat_state(current_position)
+	elif current_state == states.BALL:
+		return _on_ball(current_position)
 	else:
 		current_state = states.WANDER
 	return Vector2.ZERO
 
 func _check_for_state_switch(current_position : Vector2):
 	# See if there is a ball or fish nearby (or check for weight desires?)
-	var desired_ball = _get_desired_ball_or_null(current_position)
-	if desired_ball != null:
-		desired_object = desired_ball
-		return
+	if desired_object == null or not is_instance_valid(desired_object):
+		#if desired_object.get_class() == "Ball":
+		var desired_ball = _get_desired_ball_or_null(current_position)
+		if desired_ball != null:
+			desired_object = desired_ball
+			time_since_kick = 0
+			n_kicks = 0
+			_switch_state(states.BALL)
+			return
+	# We have to kick the ball once before eating fish
+	if is_instance_valid(desired_object) and desired_object.get_class() == "Ball":
+		if n_kicks < 1:
+			return
 	var desired_fish = _get_desired_fish_or_null(current_position)
 	if desired_fish != null:
-		#print("Eat desire = ", eat_desire)
 		desired_object = desired_fish
 		_switch_state(states.EAT)
-		
 
 func _get_desired_ball_or_null(current_position : Vector2):
 	var balls = get_tree().get_nodes_in_group("Ball")
@@ -68,6 +89,8 @@ func _get_desired_ball_or_null(current_position : Vector2):
 	var min_dist_sq = INF
 	ball_desire = 0
 	for ball in balls:
+		if ball.state == ball.SELECTED:
+			continue
 		var dist_sq = current_position.distance_squared_to(ball.global_position)
 		if dist_sq < 0.1:
 			return ball
@@ -77,6 +100,7 @@ func _get_desired_ball_or_null(current_position : Vector2):
 		if dist_sq < min_dist_sq:
 			closest_ball = ball
 			min_dist_sq = dist_sq
+	#print(ball_desire)
 	if ball_desire > desire_threshold:
 		return closest_ball
 	return null
@@ -112,7 +136,6 @@ func _on_wandar_state(current_position : Vector2) -> Vector2:
 			wander_position.x = current_position.x + (randi() % max_wandar_distance) - half_max_wander
 			wander_position.y = current_position.y + (randi() % max_wandar_distance) - half_max_wander
 			wander_looking_vec = current_position.direction_to(wander_position)
-			print("Wandering to ", wander_position, " from ", current_position)
 		else:
 			wander_position = current_position
 			wander_looking_vec = Vector2.ZERO
@@ -160,7 +183,10 @@ func _on_eat_state(current_position : Vector2) -> Vector2:
 	return current_position.direction_to(desired_object.global_position)
 
 func _on_ball(current_position : Vector2) -> Vector2:
-	# Go towards the nearest ball
+	if is_instance_valid(desired_object):
+		if desired_object.get_class() == "Ball":
+			return current_position.direction_to(desired_object.global_position)
+	_switch_state(states.WANDER)
 	return Vector2.ZERO
 
 func _on_slide(current_position : Vector2) -> Vector2:
@@ -180,11 +206,12 @@ func after_bucket_collision():
 		previous_state = current_state
 		current_state = states.EAT
 		desired_object = null
-		print("Setting state to eat")
 
 func after_eating_fish():
 	if previous_state == states.GO_FOR_BUCKET:
 		current_state = states.GO_FOR_BUCKET
+	elif previous_state == states.BALL:
+		current_state = states.BALL
 	else:
 		current_state = states.WANDER
 	desired_object = null
@@ -194,5 +221,4 @@ func get_desire(percent : float):
 	assert(0 < percent and percent <= 1)
 	var desire = (0.1 / percent) - 0.1
 	desire = clamp(desire, 0, 1)
-	#print("Desire = ", desire)
 	return desire

@@ -78,11 +78,19 @@ func _on_collision(collider : Object) -> void:
 			apply_impulse()
 	if collider.is_in_group("BucketOfFish"):
 		(collider as BucketOfFish).on_penguin_collision(self)
+	if collider.is_in_group("Penguin"):
+		print("Collided with penguin")
 
 func on_fish_collision():
-	print("Collided with fish ")
 	penguin_state = EATING_FISH
 	animations.play("EatingFish")
+
+func on_ball_collision(ball : Ball) -> void:
+	var vec_to_ball = ball.global_position.direction_to(self.global_position)
+	collision_impulse = vec_to_ball * impulse_speed
+	velocity = collision_impulse
+	ai.n_kicks += 1
+	ai.time_since_kick = 0
 
 func apply_impulse():
 	# Applay an impulse opposite +/- 45 degrees from the looking vector
