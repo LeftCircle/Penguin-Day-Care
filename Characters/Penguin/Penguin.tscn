@@ -107,6 +107,7 @@ anims/RESET = SubResource( 3 )
 [node name="AnimationSprites" type="Node2D" parent="."]
 
 [node name="FishToEat" type="Sprite" parent="AnimationSprites"]
+visible = false
 position = Vector2( 6, 3 )
 scale = Vector2( 0.6, 0.633333 )
 texture = ExtResource( 4 )
@@ -114,7 +115,13 @@ texture = ExtResource( 4 )
 [node name="Particles2D" type="Particles2D" parent="."]
 position = Vector2( 3, 4 )
 scale = Vector2( 0.1, 0.1 )
+emitting = false
 lifetime = 0.75
 explosiveness = 0.42
 process_material = SubResource( 4 )
 texture = ExtResource( 4 )
+
+[node name="DigestionTimer" type="Timer" parent="."]
+process_mode = 0
+wait_time = 10.0
+autostart = true
