@@ -895,6 +895,7 @@ anims/WalkUp = SubResource( 7 )
 [node name="AnimationSprites" type="Node2D" parent="."]
 
 [node name="FishToEat" type="Sprite" parent="AnimationSprites"]
+visible = false
 position = Vector2( 6, 3 )
 scale = Vector2( 0.6, 0.633333 )
 texture = ExtResource( 4 )
@@ -909,6 +910,8 @@ vframes = 3
 frame = 14
 
 [node name="Fight" type="Sprite" parent="AnimationSprites"]
+visible = false
+scale = Vector2( 0.01, 0.01 )
 texture = ExtResource( 6 )
 hframes = 6
 

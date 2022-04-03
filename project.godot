@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Map/Objects/Fish/Fish.gd"
 }, {
+"base": "Node",
+"class": "Level",
+"language": "GDScript",
+"path": "res://Map/Levels/Level_0.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Penguin",
 "language": "GDScript",
@@ -38,6 +43,7 @@ _global_script_class_icons={
 "Ball": "",
 "BucketOfFish": "",
 "Fish": "",
+"Level": "",
 "Penguin": "",
 "PenguinAI": ""
 }
@@ -45,12 +51,20 @@ _global_script_class_icons={
 [application]
 
 config/name="Penguin Day Care"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://Map/Levels/Level_0.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 GlobalFunctions="*res://Singletons/GlobalFunctions.gd"
+
+[input]
+
+pick_up={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
 
 [layer_names]
 
