@@ -14,9 +14,15 @@ func get_random_object_in_group(group : String):
 	return group_objects[randi() % group_objects.size()]
 
 func is_on_land(point : Vector2):
-	return land_nav.get_closest_point(point).distance_squared_to(point) < 1
+	if is_instance_valid(land_nav):
+		return land_nav.get_closest_point(point).distance_squared_to(point) < 1
+	else:
+		return false
 
 func is_in_water(point : Vector2):
-	return water_nav.get_closest_point(point).distance_squared_to(point) < 1
+	if is_instance_valid(water_nav):
+		return water_nav.get_closest_point(point).distance_squared_to(point) < 1
+	else:
+		return false
 
 

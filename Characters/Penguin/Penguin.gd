@@ -33,6 +33,12 @@ func get_class():
 	return "Penguin"
 
 func _physics_process(delta):
+	if GlobalFunctions.is_in_water(global_position):
+		if not is_in_group("PenguinInWater"):
+			add_to_group("PenguinInWater")
+	else:
+		if is_in_group("PenguinInWater"):
+			remove_from_group("PenguinInWater")
 	if penguin_state == SEARCH:
 		looking_vector = ai.get_looking_vector_and_set_state(self.global_position)
 		if collision_impulse != Vector2.ZERO:
