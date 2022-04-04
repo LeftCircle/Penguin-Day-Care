@@ -9,21 +9,20 @@ script = ExtResource( 3 )
 
 [node name="Success" type="Sprite" parent="."]
 visible = false
-position = Vector2( 963, 543 )
-scale = Vector2( 1.04797, 1.04797 )
+position = Vector2( 767, 373 )
+scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 1 )
 
 [node name="Failure" type="Sprite" parent="."]
-visible = false
-position = Vector2( 962, 538 )
-scale = Vector2( 1.01331, 1.01331 )
+position = Vector2( 768, 395 )
+scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="."]
-margin_left = 584.0
-margin_top = 917.0
-margin_right = 726.0
-margin_bottom = 931.0
+margin_left = 387.0
+margin_top = 663.0
+margin_right = 529.0
+margin_bottom = 677.0
 rect_scale = Vector2( 5.16, 5.16 )
 text = "Press Space to Restart"
 __meta__ = {

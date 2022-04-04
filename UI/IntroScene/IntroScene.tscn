@@ -336,15 +336,17 @@ anims/RESET = SubResource( 4 )
 [node name="Sprites" type="Node2D" parent="RuleSprites"]
 
 [node name="Rules1" type="Sprite" parent="RuleSprites/Sprites"]
+position = Vector2( -9.15527e-05, -6.10352e-05 )
+scale = Vector2( 1, 1 )
 texture = ExtResource( 7 )
 hframes = 4
 vframes = 9
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
-margin_left = 457.0
-margin_top = 406.0
-margin_right = 646.0
-margin_bottom = 446.0
+margin_left = -171.0
+margin_top = 211.0
+margin_right = 18.0001
+margin_bottom = 251.0
 rect_scale = Vector2( 2.84, 2.84 )
 text = "Press Space to skip"
 __meta__ = {
