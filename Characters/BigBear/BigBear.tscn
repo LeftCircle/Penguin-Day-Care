@@ -311,6 +311,7 @@ tracks/1/keys = {
 
 [node name="BigBear" type="Sprite" parent="Sprites"]
 texture = ExtResource( 1 )
+flip_h = true
 hframes = 12
 frame = 1
 
