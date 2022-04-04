@@ -4,7 +4,7 @@ class_name PenguinAI
 export(float, 0, 1) var switch_state_chance = 0.05
 export(int, 150, 500) var max_sight = 500
 export(int, 100, 5000) var max_wandar_distance = 2000
-export(float, 0, 1) var desire_threshold = 0.87
+export(float, 0, 1) var desire_threshold = 0.80
 export(float, 0, 350) var desire_distance = 350
 export(int, 0, 600) var max_ball_chase = 180
 export(int, 0, 5) var max_kicks = 3
@@ -31,6 +31,7 @@ var n_kicks = 0
 var desired_object = null
 var wander_position = Vector2.INF
 
+onready var penguin = get_parent()
 onready var desire_sq_dist = pow(desire_distance, 2)
 onready var half_max_wander = max_wandar_distance / 2
 
@@ -48,9 +49,18 @@ func _physics_process(delta):
 			time_since_kick = 0
 			_switch_state(states.WANDER)
 		time_since_kick += 1
+	pass
 
 func _switch_state(new_state : int) -> void:
 	if new_state != current_state:
+		if new_state == states.BALL:
+			penguin.show_desire("ball")
+		elif new_state == states.EAT or states.GO_FOR_BUCKET:
+			penguin.show_desire("fish")
+		elif new_state == states.SWIM:
+			penguin.show_desire("swim")
+		else:
+			penguin.show_desire("idle")
 		previous_state = current_state
 		current_state = new_state
 
@@ -58,14 +68,19 @@ func get_looking_vector_and_set_state(current_position : Vector2) -> Vector2:
 	_check_for_state_switch(current_position)
 	#return Vector2.ZERO
 	if current_state == states.WANDER:
+		penguin.show_desire("idle")
 		return _on_wandar_state(current_position)
 	elif current_state == states.GO_FOR_BUCKET:
+		penguin.show_desire("fish")
 		return _on_bucket_state(current_position)
 	elif current_state == states.EAT:
+		penguin.show_desire("fish")
 		return _on_eat_state(current_position)
 	elif current_state == states.BALL:
+		penguin.show_desire("ball")
 		return _on_ball(current_position)
 	elif current_state == states.SWIM:
+		penguin.show_desire("swim")
 		return _on_swim(current_position)
 	else:
 		current_state = states.WANDER
@@ -184,8 +199,11 @@ func _on_bucket_state(current_position : Vector2) -> Vector2:
 		previous_state = states.WANDER
 		desired_object = null
 		return Vector2.ZERO
-	var looking_vec = current_position.direction_to(desired_object.global_position)
-	return looking_vec
+	if is_instance_valid(desired_object):
+		return current_position.direction_to(desired_object.global_position)
+	else:
+		return Vector2.ZERO
+
 
 func _on_eat_state(current_position : Vector2) -> Vector2:
 		# If there is food within range, go towards the food. If not, check the previous

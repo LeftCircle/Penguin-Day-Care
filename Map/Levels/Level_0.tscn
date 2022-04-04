@@ -1,14 +1,15 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Assets/Maps/Level_0.png" type="Texture" id=1]
 [ext_resource path="res://Map/Levels/Level_0.gd" type="Script" id=2]
-[ext_resource path="res://Characters/Penguin/Penguin.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Map/Levels/Scenes/SpawnArea.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Map/Objects/Ball/Ball.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Map/Objects/SwimPoints/SwimPoint.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Map/Objects/Fish/Fish.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Map/Objects/BucketOfFish/BucketOfFish.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Characters/Shark/Shark.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Assets/Maps/Level_0_land.png" type="Texture" id=9]
+[ext_resource path="res://Map/Levels/Scenes/PenguinHandler.tscn" type="PackedScene" id=10]
 
 [sub_resource type="NavigationPolygon" id=1]
 vertices = PoolVector2Array( 1173, 874, 1184, 988, 842, 988, 839, 919, 594, 751, 402, 759, 404, 697, 1592, 353, 1590, 599, 1536, 596, 1411, 356, 327, 700, 327, 385, 410, 385, 1211, 195, 1331, 195, 1328, 281, 1395, 719, 1395, 879, 596, 190, 594, 99, 1211, 99, 594, 924, 1536, 721, 1413, 284, 412, 190 )
@@ -103,36 +104,16 @@ position = Vector2( 1078, 465 )
 [node name="BucketOfFish" parent="." instance=ExtResource( 7 )]
 position = Vector2( 1089, 790 )
 
-[node name="PenguinContainer" type="Node2D" parent="."]
-
-[node name="Penguin" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 508, 527 )
-
-[node name="Penguin2" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 584, 418 )
-
-[node name="Penguin3" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 920, 418 )
-
-[node name="Penguin4" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 900, 695 )
-
-[node name="Penguin5" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 1198, 618 )
-
-[node name="Penguin6" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 1438, 534 )
-
-[node name="Penguin7" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 1201, 353 )
-
-[node name="Penguin8" parent="PenguinContainer" instance=ExtResource( 3 )]
-position = Vector2( 813, 215 )
-
 [node name="SharkContainer" type="Node2D" parent="."]
 
 [node name="KinematicBody2D" parent="SharkContainer" instance=ExtResource( 8 )]
 position = Vector2( 274, 236 )
+
+[node name="KinematicBody2D2" parent="SharkContainer" instance=ExtResource( 8 )]
+position = Vector2( 491, 961 )
+
+[node name="KinematicBody2D3" parent="SharkContainer" instance=ExtResource( 8 )]
+position = Vector2( 1735, 242 )
 
 [node name="CollisionBorder" type="Node2D" parent="."]
 
@@ -164,3 +145,16 @@ collision_mask = 7
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBorder/RightBorder"]
 position = Vector2( -32, 538.5 )
 shape = SubResource( 4 )
+
+[node name="PenguinHandler" parent="." instance=ExtResource( 10 )]
+rect_scale = Vector2( 1.00282, 1 )
+n_penguins = 20
+must_survive = 12
+
+[node name="SpawnArea" parent="PenguinHandler/Spawners" index="0" instance=ExtResource( 3 )]
+position = Vector2( 536, 446 )
+
+[node name="SpawnArea2" parent="PenguinHandler/Spawners" index="1" instance=ExtResource( 3 )]
+position = Vector2( 1232, 490 )
+
+[editable path="PenguinHandler"]

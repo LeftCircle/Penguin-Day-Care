@@ -1,0 +1,71 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Map/Levels/Scenes/PenguinHandler.gd" type="Script" id=1]
+
+[node name="PenguinHandler" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1920.0
+margin_bottom = -1080.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Spawners" type="Node2D" parent="."]
+
+[node name="PenguinContainer" type="Node2D" parent="."]
+
+[node name="SecondTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="Labels" type="Node2D" parent="."]
+
+[node name="TimeLabel" type="Label" parent="Labels"]
+margin_left = 1584.0
+margin_top = 1.0
+margin_right = 1624.0
+margin_bottom = 41.0
+rect_scale = Vector2( 4.70324, 4.70324 )
+text = "Time:"
+
+[node name="DeathsLabel" type="Label" parent="Labels"]
+margin_left = 1524.0
+margin_top = 74.0
+margin_right = 1577.0
+margin_bottom = 114.0
+rect_scale = Vector2( 4.70324, 4.70324 )
+text = "Deaths:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Time" type="Label" parent="Labels"]
+margin_left = 1784.0
+margin_top = 8.0
+margin_right = 1824.0
+margin_bottom = 48.0
+rect_scale = Vector2( 4.70324, 4.70324 )
+text = "0"
+
+[node name="Deaths" type="Label" parent="Labels"]
+margin_left = 1784.0
+margin_top = 84.0
+margin_right = 1824.0
+margin_bottom = 124.0
+rect_scale = Vector2( 4.70324, 4.70324 )
+text = "0"
+
+[node name="DeathLimitLabel" type="Label" parent="Labels"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 660.0
+margin_top = 1.0
+margin_right = 792.0
+margin_bottom = 41.0
+rect_scale = Vector2( 4.70324, 4.70324 )
+text = "Delay x Deaths"
+
+[connection signal="timeout" from="SecondTimer" to="." method="_on_SecondTimer_timeout"]

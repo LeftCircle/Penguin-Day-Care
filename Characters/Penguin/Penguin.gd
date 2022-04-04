@@ -18,7 +18,7 @@ var collision_impulse = Vector2.ZERO
 var impulse_decay = 200
 var penguin_state = SEARCH
 
-
+onready var desires = $AnimationSprites/Desire
 onready var animations = $AnimationPlayer
 onready var ai = $PenguinAI
 onready var particles = $Particles2D
@@ -61,7 +61,7 @@ func _idle(delta):
 
 func _move(delta):
 	if GlobalFunctions.is_in_water(global_position):
-		animations.play("SlideUp")
+		animations.play("SlideDown")
 	else:
 		animations.play("WalkDown")
 	var max_speed = max_wander_speed if ai.current_state == ai.states.WANDER else max_interest_speed
@@ -111,7 +111,7 @@ func on_penguin_collision(penguin : Penguin):
 
 func on_ball_collision(ball : Ball) -> void:
 	var vec_to_ball = ball.global_position.direction_to(self.global_position)
-	collision_impulse = vec_to_ball * impulse_speed
+	collision_impulse = vec_to_ball * 0.5 *  impulse_speed
 	velocity = collision_impulse
 	ai.n_kicks += 1
 	#print(ai.n_kicks)
@@ -146,3 +146,15 @@ func on_death():
 	set_physics_process(false)
 	animations.play("Pop")
 
+func show_desire(desire : String):
+	if desire == "swim":
+		desires.show()
+		desires.frame = 0
+	elif desire == "fish":
+		desires.show()
+		desires.frame = 8
+	elif desire == "ball":
+		desires.show()
+		desires.frame = 12
+	else:
+		desires.hide()
