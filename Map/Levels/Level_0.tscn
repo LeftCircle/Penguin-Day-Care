@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Assets/Maps/Level_0.png" type="Texture" id=1]
 [ext_resource path="res://Map/Levels/Level_0.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Map/Objects/Fish/Fish.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Map/Objects/BucketOfFish/BucketOfFish.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Characters/Shark/Shark.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Assets/Maps/Level_0_land.png" type="Texture" id=9]
 
 [sub_resource type="NavigationPolygon" id=1]
 vertices = PoolVector2Array( 1173, 874, 1184, 988, 842, 988, 839, 919, 594, 751, 402, 759, 404, 697, 1592, 353, 1590, 599, 1536, 596, 1411, 356, 327, 700, 327, 385, 410, 385, 1211, 195, 1331, 195, 1328, 281, 1395, 719, 1395, 879, 596, 190, 594, 99, 1211, 99, 594, 924, 1536, 721, 1413, 284, 412, 190 )
@@ -19,12 +20,28 @@ vertices = PoolVector2Array( 1901, 11, 1908, 1074, 1619, 634, 1612, 331, 1561, 7
 polygons = [ PoolIntArray( 0, 1, 2, 3 ), PoolIntArray( 4, 5, 2, 1 ), PoolIntArray( 6, 7, 8, 1 ), PoolIntArray( 9, 10, 11, 12 ), PoolIntArray( 8, 13, 4, 1 ), PoolIntArray( 11, 14, 15, 12 ), PoolIntArray( 16, 17, 18, 19 ), PoolIntArray( 18, 20, 21 ), PoolIntArray( 22, 23, 9, 12 ), PoolIntArray( 24, 25, 26, 0 ), PoolIntArray( 27, 28, 24, 0 ), PoolIntArray( 3, 29, 27, 0 ), PoolIntArray( 19, 0, 26, 16 ), PoolIntArray( 12, 19, 18, 21 ), PoolIntArray( 12, 21, 22 ), PoolIntArray( 6, 1, 12, 15 ) ]
 outlines = [ PoolVector2Array( 1908, 1074, 1901, 11, 7, 11, 14, 1071 ), PoolVector2Array( 1208, 1017, 1208, 913, 1420, 916, 1420, 761, 1561, 761, 1561, 630, 1619, 634, 1612, 331, 1440, 334, 1421, 264, 1353, 257, 1342, 170, 1238, 169, 1221, 81, 582, 81, 575, 166, 391, 173, 391, 361, 308, 374, 310, 732, 367, 731, 381, 798, 562, 798, 562, 970, 811, 970, 815, 1027 ) ]
 
+[sub_resource type="RectangleShape2D" id=3]
+resource_local_to_scene = true
+extents = Vector2( 967.839, 50.5 )
+
+[sub_resource type="RectangleShape2D" id=4]
+resource_local_to_scene = true
+extents = Vector2( 34, 548.5 )
+
 [node name="Level_0" type="Node"]
 script = ExtResource( 2 )
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="FullMap" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 centered = false
+
+[node name="Land" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+z_index = 1
+texture = ExtResource( 9 )
+
+[node name="BucketOfFish" parent="Land" instance=ExtResource( 7 )]
+position = Vector2( -234, -185 )
 
 [node name="LandNav" type="Navigation2D" parent="."]
 z_index = 2
@@ -116,3 +133,34 @@ position = Vector2( 813, 215 )
 
 [node name="KinematicBody2D" parent="SharkContainer" instance=ExtResource( 8 )]
 position = Vector2( 274, 236 )
+
+[node name="CollisionBorder" type="Node2D" parent="."]
+
+[node name="Border" type="StaticBody2D" parent="CollisionBorder"]
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBorder/Border"]
+position = Vector2( 957.161, -51.5 )
+shape = SubResource( 3 )
+
+[node name="BottomBorder" type="StaticBody2D" parent="CollisionBorder"]
+collision_mask = 7
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="CollisionBorder/BottomBorder"]
+position = Vector2( 957, 1130 )
+shape = SubResource( 3 )
+
+[node name="LeftBorder" type="StaticBody2D" parent="CollisionBorder"]
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBorder/LeftBorder"]
+position = Vector2( -32, 538.5 )
+shape = SubResource( 4 )
+
+[node name="RightBorder" type="StaticBody2D" parent="CollisionBorder"]
+position = Vector2( 1986, -8 )
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBorder/RightBorder"]
+position = Vector2( -32, 538.5 )
+shape = SubResource( 4 )

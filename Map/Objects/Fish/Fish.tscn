@@ -1,13 +1,15 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Assets/fish.png" type="Texture" id=1]
+[ext_resource path="res://Assets/FishBucket/FishSmall.png" type="Texture" id=1]
 [ext_resource path="res://Map/Objects/Fish/Fish.gd" type="Script" id=2]
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="CapsuleShape2D" id=1]
 resource_local_to_scene = true
-extents = Vector2( 36, 20 )
+radius = 18.9512
+height = 42.6922
 
 [node name="Fish" type="RigidBody2D"]
+z_index = 2
 collision_layer = 4
 collision_mask = 7
 input_pickable = true
@@ -18,11 +20,13 @@ script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 1, -2 )
-scale = Vector2( 3, 3 )
 texture = ExtResource( 1 )
+hframes = 6
+frame = 3
 
 [node name="Collision" type="CollisionShape2D" parent="."]
-position = Vector2( -3, 3 )
+position = Vector2( -4, 12 )
+rotation = 0.656244
 shape = SubResource( 1 )
 
 [connection signal="body_entered" from="." to="." method="_on_Fish_body_entered"]

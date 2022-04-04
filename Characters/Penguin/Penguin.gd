@@ -33,6 +33,7 @@ func get_class():
 	return "Penguin"
 
 func _physics_process(delta):
+	food_scale()
 	if GlobalFunctions.is_in_water(global_position):
 		if not is_in_group("PenguinInWater"):
 			add_to_group("PenguinInWater")
@@ -69,8 +70,6 @@ func _move(delta):
 		velocity = velocity.normalized() * max_speed
 	_move_slide_and_collide()
 
-func _diet_manager():
-	pass
 
 func _on_collision_impulse(delta):
 	collision_impulse = collision_impulse.move_toward(Vector2.ZERO, impulse_decay * delta)
@@ -82,7 +81,6 @@ func _move_slide_and_collide() -> void:
 	velocity = move_and_slide(velocity)
 	for i in get_slide_count():
 		var collision = get_slide_collision(i)
-		#print("I collided with ", collision.collider.name)
 		var collider = collision.collider
 		_on_collision(collider)
 
@@ -92,8 +90,10 @@ func _on_collision(collider : Object) -> void:
 			apply_impulse()
 	if collider.is_in_group("BucketOfFish"):
 		(collider as BucketOfFish).on_penguin_collision(self)
-	if collider.is_in_group("Penguin"):
+	elif collider.is_in_group("Penguin"):
 		on_penguin_collision(collider)
+	elif collider.is_in_group("Shark"):
+		_on_shark_collision()
 
 func on_fish_collision():
 	penguin_state = EATING_FISH
@@ -117,6 +117,9 @@ func on_ball_collision(ball : Ball) -> void:
 	#print(ai.n_kicks)
 	ai.time_since_kick = 0
 
+func _on_shark_collision():
+	queue_free()
+
 func apply_impulse():
 	# Applay an impulse opposite +/- 45 degrees from the looking vector
 	var r_degrees = 65 if randi() % 2 == 0 else -65
@@ -126,15 +129,20 @@ func apply_impulse():
 func _on_finished_eating_fish():
 	penguin_state = SEARCH
 	fish_in_stomach += 1
-	if fish_in_stomach > max_fish_in_stomach:
-		_eating_too_much_death()
+	if fish_in_stomach >= max_fish_in_stomach:
+		on_death()
 	ai.after_eating_fish()
-
-func _eating_too_much_death():
-	queue_free()
 
 func _on_digestion_timer_end():
 	#print("Digested")
 	fish_in_stomach -= 1
 	fish_in_stomach = max(0, fish_in_stomach)
+
+func food_scale():
+	var scale_increase = 0.5 * fish_in_stomach
+	scale = Vector2.ONE * scale_increase + Vector2.ONE
+
+func on_death():
+	set_physics_process(false)
+	animations.play("Pop")
 

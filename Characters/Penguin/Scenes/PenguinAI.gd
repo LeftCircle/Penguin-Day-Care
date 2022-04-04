@@ -88,7 +88,6 @@ func _check_for_state_switch(current_position : Vector2):
 #			return
 	var desired_fish = _get_desired_fish_or_null(current_position)
 	if desired_fish != null:
-		print("Desire dropped fish")
 		desired_object = desired_fish
 		_switch_state(states.EAT)
 
@@ -119,7 +118,8 @@ func _get_desired_fish_or_null(current_position : Vector2):
 	if previous_state == states.GO_FOR_BUCKET or current_state == states.GO_FOR_BUCKET:
 		return null
 	var closest_fish = null
-	var all_fish = get_tree().get_nodes_in_group("DroppedFish")
+	#var all_fish = get_tree().get_nodes_in_group("DroppedFish")
+	var all_fish = get_tree().get_nodes_in_group("Fish")
 	var min_distance_sq = INF
 	eat_desire = 0
 	for fish in all_fish:
